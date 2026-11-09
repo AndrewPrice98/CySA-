@@ -143,12 +143,13 @@ export default {
       prompt: 'Put the remaining response steps in the right order.',
       items: [
         'Capture memory and disk images, record hashes, start chain of custody',
-        'Remove the cron entry and the sysupdate account; rotate svc_backup credentials',
+        'Remove the cron entry and the sysupdate account',
         'Disable password authentication for SSH and restrict it to the bastion host',
+        'Rotate the svc_backup credentials',
         'Restore service and monitor for callbacks to 203.0.113.77',
         'Hold a lessons-learned review and update the playbook',
       ],
-      explain: 'Preserve evidence, then eradicate (remove persistence, rotate credentials), harden so it can\'t recur, recover with monitoring, and finish with post-incident activity.',
+      explain: 'Preserve evidence first. Eradication then runs in a fixed order: remove every persistence mechanism, close the weakness that let the attacker in (password SSH open to the internet), and only then rotate the svc_backup credentials, so the new secret can\'t be guessed or harvested the same way. Recover with monitoring, and finish with post-incident activity.',
     },
   ],
 }

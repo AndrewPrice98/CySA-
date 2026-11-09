@@ -82,7 +82,7 @@ function Setup({ onStart }) {
         </label>
         <p className="fine">
           {pbqs ? `${pbqs} PBQ${pbqs > 1 ? 's' : ''} + ` : ''}{mcq} multiple choice. Domain mix: {DOMAINS.map((d) => `${d.weight}% D${d.num}`).join(' · ')}.
-          {pbqs > 0 && ' Tip from test-takers: PBQs can eat time. Flag a hard one, finish the multiple choice, then come back.'}
+          {pbqs > 0 && ' Strategy: read each PBQ, flag it and move on, finish the multiple choice, then come back with the time that’s left. Budget about 5–10 minutes per PBQ.'}
         </p>
         <button className="btn" onClick={start}>Start exam</button>
       </div>

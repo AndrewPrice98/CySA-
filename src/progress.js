@@ -1,7 +1,6 @@
 import { useMemo } from 'react'
 import { OBJECTIVES, DOMAINS } from './data/objectives.js'
-import { QUESTIONS } from './data/questions.js'
-import { TERMS } from './data/terms.js'
+import { QUESTION_IDS, TERM_NAMES } from 'virtual:catalog'
 import { useStored } from './hooks/useStored.js'
 
 export const KEYS = {
@@ -22,10 +21,10 @@ export function matches(filter, objectiveId) {
 }
 
 export function objectiveStats(objId, stats) {
-  const qs = QUESTIONS.filter((q) => q.objective === objId)
-  const answered = qs.filter((q) => stats[q.id])
-  const right = answered.filter((q) => stats[q.id].last === 'right').length
-  return { total: qs.length, answered: answered.length, right, acc: answered.length ? right / answered.length : null }
+  const ids = QUESTION_IDS[objId] ?? []
+  const answered = ids.filter((id) => stats[id])
+  const right = answered.filter((id) => stats[id].last === 'right').length
+  return { total: ids.length, answered: answered.length, right, acc: answered.length ? right / answered.length : null }
 }
 
 export function useProgress() {
@@ -36,8 +35,8 @@ export function useProgress() {
   return useMemo(() => {
     const byObjective = Object.fromEntries(OBJECTIVES.map((o) => {
       const s = objectiveStats(o.id, stats)
-      const terms = TERMS.filter((t) => t.objective === o.id)
-      const known = terms.filter((t) => cards[t.term] === 'known').length
+      const terms = TERM_NAMES[o.id] ?? []
+      const known = terms.filter((t) => cards[t] === 'known').length
       return [o.id, { ...s, studied: !!studied[o.id], terms: terms.length, known }]
     }))
     const byDomain = Object.fromEntries(DOMAINS.map((d) => {

@@ -1,7 +1,6 @@
 import { navigate } from '../App.jsx'
 import { DOMAINS, OBJECTIVES, EXAM } from '../data/objectives.js'
-import { QUESTIONS } from '../data/questions.js'
-import { TERMS } from '../data/terms.js'
+import { QUESTION_COUNT, TERM_COUNT } from 'virtual:catalog'
 import { useProgress, KEYS, pct } from '../progress.js'
 import { useEffect, useState } from 'react'
 import { useStored } from '../hooks/useStored.js'
@@ -39,8 +38,9 @@ export default function Home() {
       <h1>Dashboard</h1>
       <p className="lede">
         The V4 exam (launched June 2026): up to {EXAM.maxQuestions} questions in {EXAM.minutes} minutes, opening with
-        performance-based questions (PBQs), then multiple choice. Passing is {EXAM.passing} on a {EXAM.scale} scale.
-        Study each objective, practise the hands-on labs until they feel routine, then run full simulations.
+        3–6 performance-based questions (PBQs), then multiple choice. Passing is {EXAM.passing} on a {EXAM.scale} scale,
+        and there is no penalty for guessing, so never leave an item blank. Study each objective, practise the hands-on
+        labs until they feel routine, then run full simulations.
       </p>
 
       <div className="grid two">
@@ -80,7 +80,7 @@ export default function Home() {
             <button className="btn ghost" onClick={() => navigate('practice')}>Practice questions</button>
             <button className="btn ghost" onClick={() => navigate('exam')}>Exam simulation</button>
           </div>
-          <p className="fine">{answered} of {QUESTIONS.length} questions answered · {TERMS.length} flashcards</p>
+          <p className="fine">{answered} of {QUESTION_COUNT} questions answered · {TERM_COUNT} flashcards</p>
         </div>
       </div>
 

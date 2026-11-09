@@ -3,17 +3,17 @@ import './App.css'
 import './labs.css'
 import Sidebar from './components/Sidebar.jsx'
 import Home from './components/Home.jsx'
-import Guide from './components/Guide.jsx'
-import Practice from './components/Practice.jsx'
-import Flashcards from './components/Flashcards.jsx'
-import Cvss from './components/Cvss.jsx'
-import Reference from './components/Reference.jsx'
 import { useStored } from './hooks/useStored.js'
 import { KEYS } from './progress.js'
 
-// Labs carry large evidence files, so they (and the exam, which embeds labs) load on demand
+// Notes, the question bank, flashcards and lab evidence are large, so each section loads on demand
+const Guide = lazy(() => import('./components/Guide.jsx'))
 const Labs = lazy(() => import('./components/Labs.jsx'))
+const Practice = lazy(() => import('./components/Practice.jsx'))
 const Exam = lazy(() => import('./components/Exam.jsx'))
+const Flashcards = lazy(() => import('./components/Flashcards.jsx'))
+const Cvss = lazy(() => import('./components/Cvss.jsx'))
+const Reference = lazy(() => import('./components/Reference.jsx'))
 
 export const SECTIONS = [
   { id: 'home', label: 'Dashboard', view: Home },

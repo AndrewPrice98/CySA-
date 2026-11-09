@@ -38,6 +38,7 @@ ID    Type                        Occurred          Detected          Acknowledg
 ${rows.map((r) => `${r.id.padEnd(6)}${r.type.padEnd(28)}${[r.occurred, r.detected, r.acknowledged, r.contained, r.remediated].map(fmt).join('  ')}`).join('\n')}
 
 SOAR went live on 2026-06-01 (automated enrichment, on-call paging and one-click containment).
+IR-3 note: the alert waited in the shared SOC queue with no on-call page; sessions were revoked by hand, one mailbox at a time.
 
 METRIC DEFINITIONS (SOC handbook)
 Time to detect       Detected - Occurred
@@ -47,7 +48,7 @@ Time to remediate    Remediated - Detected
 Report each metric as the mean across incidents, in hours.
 `
 
-const SECTIONS = ['Executive summary', 'Timeline', 'Scope', 'Impact', 'Root cause', 'Recommendations']
+const SECTIONS = ['Executive summary', 'Timeline', 'Scope', 'Impact', 'Root cause', 'Response evaluation', 'Recommendations']
 
 export default {
   id: 'ir-metrics',
@@ -70,7 +71,7 @@ export default {
       id: 'mttc', type: 'input',
       prompt: 'What is the mean time to contain (the SOC\'s "time to respond": Contained - Detected) across all five incidents, in hours?',
       answer: hourForms(MTTC),
-      explain: `Contained - Detected: ${rows.map((r) => hours(r.detected, r.contained)).join(' + ')} = ${rows.reduce((s, r) => s + hours(r.detected, r.contained), 0)} hours, and ${rows.reduce((s, r) => s + hours(r.detected, r.contained), 0)} / 5 = ${MTTC.toFixed(1)} hours. Note which clock the metric starts from. Many frameworks measure MTTR from detection, but some measure from occurrence or from acknowledgement, so a report must state its definitions or the numbers can\'t be compared.`,
+      explain: `Contained - Detected: ${rows.map((r) => hours(r.detected, r.contained)).join(' + ')} = ${rows.reduce((s, r) => s + hours(r.detected, r.contained), 0)} hours, and ${rows.reduce((s, r) => s + hours(r.detected, r.contained), 0)} / 5 = ${MTTC.toFixed(1)} hours. Note which clock the metric starts from. Many frameworks measure MTTR from detection, but some measure from occurrence or from acknowledgement, so a report must state its definitions or the numbers can\'t be compared. Mean time to remediate varies the same way: this handbook measures it from detection, while other sources measure it from containment.`,
     },
     {
       id: 'soar', type: 'single',
@@ -89,9 +90,10 @@ export default {
         { label: '"Two mailboxes (ap-clerk, ap-lead) and one SharePoint site were accessed; no other accounts or systems were involved."', answer: { section: 'Scope' } },
         { label: '"Accounts payable stopped work for 5 hours, and 312 supplier contact records (names, emails, phone numbers) were exposed."', answer: { section: 'Impact' } },
         { label: '"Legacy IMAP authentication was still enabled for the finance group, which let the attacker sign in without MFA."', answer: { section: 'Root cause' } },
+        { label: '"The alert sat unacknowledged in the shared queue for 40 minutes because nobody was paged, and revoking sessions by hand stretched containment to 5 hours after detection."', answer: { section: 'Response evaluation' } },
         { label: '"Disable legacy authentication tenant-wide by 30 June (owner: IAM team) and require call-back verification for bank-detail changes."', answer: { section: 'Recommendations' } },
       ],
-      explain: 'The executive summary is the whole story in plain language: what happened, the outcome and the current status. The timeline lists timestamped events. Scope is what was touched: accounts, systems and data. Impact is the effect on the business: downtime, data exposed and cost. Root cause is the underlying weakness, not the attacker\'s action. Recommendations are specific, with an owner and a date. Telling scope from impact is the usual trap: scope is how wide, impact is how much it hurt.',
+      explain: 'The executive summary is the whole story in plain language: what happened, the outcome and the current status. The timeline lists timestamped events. Scope is what was touched: accounts, systems and data. Impact is the effect on the business: downtime, data exposed and cost. Root cause is the underlying weakness, not the attacker\'s action. Response evaluation judges the response itself: what worked, where time was lost and which playbook steps fell short. A report without it is incomplete, because that is where the improvements come from. Recommendations are specific, with an owner and a date. Telling scope from impact is the usual trap: scope is how wide, impact is how much it hurt.',
     },
     {
       id: 'execsum', type: 'multi',

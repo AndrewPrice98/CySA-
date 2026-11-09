@@ -90,7 +90,7 @@ export default {
       id: 'ip', type: 'input',
       prompt: 'What is the true IP address of the server that sent this message onto the internet?',
       answer: ['198.51.100.73'],
-      explain: 'Read the Received chain from the top down and stop at the first hop added by infrastructure you trust. mx1.brightwater.example recorded the connecting IP as [198.51.100.73]. The IP in square brackets is what the TCP connection really came from, unlike the HELO name, which the client chooses. 10.0.0.14 sits in a Received header written by the attacker\'s own server, so it is unverifiable (and private). 192.0.2.25 is your own MX.',
+      explain: 'Read the Received chain from the top down and stop at the first hop added by infrastructure you trust. Each server prepends its own Received header, so the route reads chronologically from bottom to top, but the only trustworthy origin is the connecting IP recorded by the first hop your own gateway wrote. mx1.brightwater.example recorded the connecting IP as [198.51.100.73]. The IP in square brackets is what the TCP connection really came from, unlike the HELO name, which the client chooses. 10.0.0.14 sits in a Received header written by the attacker\'s own server, so it is unverifiable (and private). 192.0.2.25 is your own MX.',
     },
     {
       id: 'auth', type: 'grid',
